@@ -16,6 +16,7 @@ class MainActivity : AppCompatActivity() {
         val m:MyBean=MyBean()
         m.name="ddd"
         m.heiget="xxxxx"
+
         binding.data=m
     }
 }
