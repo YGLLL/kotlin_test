@@ -122,7 +122,7 @@ public class RxjavaTest {
         Consumer<String> consumer3=new Consumer<String>() {
             @Override
             public void accept(String s) throws Exception {
-                System.out.print(s);
+                System.out.print("\n"+s);
             }
         };
         Observable.fromIterable(list)
@@ -132,7 +132,10 @@ public class RxjavaTest {
                 return new ObservableSource<String>() {
                     @Override
                     public void subscribe(Observer<? super String> observer) {
-                        observer.onNext(testBean.getData().toString());
+                        for (String datum : testBean.getData()) {
+                            observer.onNext(datum);
+                        }
+
                     }
                 };
             }
