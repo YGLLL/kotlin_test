@@ -24,9 +24,8 @@ import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 
 public class RxjavaTest {
-    private static final String TAG = "RxjavaTest";
     public static void main(String[] ss){
-
+        System.out.print("\n****************基本使用*******************\n");
         final Observable observable= Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(ObservableEmitter<String> emitter) throws Exception {
@@ -45,7 +44,7 @@ public class RxjavaTest {
 
             @Override
             public void onNext(String s) {
-                System.out.print(s);
+                System.out.print("\n"+s);
             }
 
             @Override
@@ -56,17 +55,18 @@ public class RxjavaTest {
             public void onError(Throwable e) {
             }
         };
-
-//        observable.subscribe(subscriber);
-
+        //基本使用
+        observable.subscribe(subscriber);
+        System.out.print("\n****************简化*******************\n");
         Consumer<String> consumer=new Consumer<String>() {
             @Override
             public void accept(String s) throws Exception {
-                System.out.print(s);
+                System.out.print("\n"+s);
             }
         };
+        //与上面方法结果一致
         observable.subscribe(consumer);
-
+        System.out.print("\n****************另一种添加数据的方式*******************\n");
         List<String> names = new ArrayList<>();
         names.add("Hello");
         names.add("Hi");
@@ -75,15 +75,15 @@ public class RxjavaTest {
                 .subscribe(new Consumer<String>() {
                     @Override
                     public void accept(String s) throws Exception {
-                        System.out.print(s);
+                        System.out.print("\n"+s);
                     }
                 });
-        System.out.print("\n****************变换测试*******************\n");
+        System.out.print("\n****************变换测试map,filter*******************\n");
 
         Consumer<Integer> consumer2=new Consumer<Integer>() {
             @Override
             public void accept(Integer s) throws Exception {
-                System.out.print(s);
+                System.out.print("\n"+s);
             }
         };
         Observable.just(1, 3, 5, 7, 9)
@@ -95,17 +95,17 @@ public class RxjavaTest {
                     }
 
                 })
-//                .filter(new Predicate<Integer>(){
-//
-//                    @Override
-//                    public boolean test(Integer integer) throws Exception {
-//                        if (integer<5) return true;
-//                        return false;
-//                    }
-//                })
+                .filter(new Predicate<Integer>(){
+
+                    @Override
+                    public boolean test(Integer integer) throws Exception {
+                        if (integer<5) return true;
+                        return false;
+                    }
+                })
                 .subscribe(consumer2);
 
-        System.out.print("\n****************变换测试2*******************\n");
+        System.out.print("\n****************变换测试flatMap*******************\n");
 
         List<TestBean> list=new ArrayList<>();
         for (int i = 1; i < 10; i++) {
@@ -132,6 +132,7 @@ public class RxjavaTest {
                 return new ObservableSource<String>() {
                     @Override
                     public void subscribe(Observer<? super String> observer) {
+                        observer.onNext(testBean.getTime());
                         for (String datum : testBean.getData()) {
                             observer.onNext(datum);
                         }
